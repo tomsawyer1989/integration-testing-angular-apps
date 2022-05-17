@@ -1,31 +1,40 @@
-import { TestBed } from '@angular/core/testing';
+/* tslint:disable:no-unused-variable */
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing'; 
+import { RouterLinkWithHref, RouterOutlet } from '@angular/router';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([])],
+      declarations: [ AppComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges(); 
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+  it('should have a router outlet', () => {
+    let de = fixture.debugElement.query(By.directive(RouterOutlet));
+
+    expect(de).not.toBeNull();
   });
 
-  it(`should have as title 'integration-testing-apps'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('integration-testing-apps');
-  });
+  it('should have a link to todos page', () => {
+    let debugElements = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('integration-testing-apps app is running!');
+    let index = debugElements.findIndex(de => de.properties['href'] === '/todos');
+    
+    expect(index).toBeGreaterThan(-1);
   });
 });
